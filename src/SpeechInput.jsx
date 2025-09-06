@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaMicrophone, FaStop } from "react-icons/fa";
 const basePath = import.meta.env.BASE_URL;
+const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
 const SpeechInput = ({
   setText,
@@ -31,7 +32,9 @@ const SpeechInput = ({
 
     recognition.onstart = () => {
       setIsListening(true);
-      startSound.current.play();
+      if (!isMobile) {
+        startSound.current.play();
+      }
     };
 
     recognition.onresult = (event) => {
@@ -47,7 +50,9 @@ const SpeechInput = ({
 
     recognition.onend = () => {
       setIsListening(false);
-      stopSound.current.play();
+      if (!isMobile) {
+        stopSound.current.play();
+      }
     };
 
     recognition.onerror = (event) => {
