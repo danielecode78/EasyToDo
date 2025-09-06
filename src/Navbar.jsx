@@ -5,6 +5,7 @@ export default function Navbar() {
   const [clicked, setClicked] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const logoRef = useRef(null);
+  const logoSound = useRef(null);
 
   useEffect(() => {
     if (logoRef.current) {
@@ -12,17 +13,25 @@ export default function Navbar() {
     }
   }, []);
 
-  const playImageSound = () => {
-    if (isPlaying) return;
+  if (!logoSound.current) {
+    logoSound.current = new Audio(basePath + "logosound3.mp3");
+    logoSound.current.preload = "auto";
+    logoSound.current.load();
+  }
 
+  logoSound.current.onplay = () => {
     setIsPlaying(true);
     setClicked(true);
-    const audio = new Audio(basePath + "logosound3.mp3");
-    audio.play();
-    setTimeout(() => {
-      setIsPlaying(false);
-      setClicked(false);
-    }, 3000);
+  };
+
+  logoSound.current.onended = () => {
+    setIsPlaying(false);
+    setClicked(false);
+  };
+
+  const playImageSound = () => {
+    if (isPlaying) return;
+    logoSound.current.play();
   };
 
   return (
